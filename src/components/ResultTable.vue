@@ -1,7 +1,7 @@
 <template>
     <div class="q-pa-md">
       <q-table
-        v-if ="store.tableResultObject.length > 0"
+        v-if ="store.tableResultObject && store.tableResultObject.length > 0"
         title="Konzepte"
         :rows="store.tableResultObject"
         :columns="columns"

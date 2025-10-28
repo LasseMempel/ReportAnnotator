@@ -70,22 +70,99 @@ function calculateResult(text, labelsMap, stemmedLabelsMap, conceptsMap, stemmed
   const sentences = tokenizeSentences(text);
   const normdataArray = [];
   const annotatedSentences = [];
+  
+  // Keep track of URIs we've already added to normdataArray to avoid duplicates
+  const addedUris = new Set();
+  
   for (let sentence of sentences) {
     sentence = tokenizeWords(sentence).join('');
     console.log("sentence", sentence);
+    
+    // Create sentence object with segments for ResultCard
     const sentenceObj = {
-      string: sentence,
-      concepts: []
+      segments: []
     };
+    
     const matches = getMatches(sentence, labelsMap, false);
     console.log("matches", matches);
-    sentenceObj.concepts.push(...matches);
+    
+    let allMatches = [...matches];
     if (stemmed) {
       const stemmedMatches = getMatches(sentence, stemmedLabelsMap, true);
       console.log("stemmedMatches", stemmedMatches);
-      sentenceObj.concepts.push(...stemmedMatches);
+      allMatches.push(...stemmedMatches);
     }
-    annotatedSentences.push(sentenceObj.concepts);
+    
+    // Sort matches by start position
+    allMatches.sort((a, b) => a[0] - b[0]);
+    
+    // Process matches to create segments
+    if (allMatches.length > 0) {
+      let lastEnd = 0;
+      
+      for (const match of allMatches) {
+        const [start, end, label, uris] = match;
+        
+        // Only process if this match starts after the previous one ended (avoid overlaps)
+        if (start >= lastEnd) {
+          // Add non-highlighted text before this match
+          if (start > lastEnd) {
+            sentenceObj.segments.push({
+              text: sentence.substring(lastEnd, start),
+              highlighted: false
+            });
+          }
+          
+          // Add the highlighted segment
+          sentenceObj.segments.push({
+            text: sentence.substring(start, end + 1),
+            highlighted: true,
+            label: label,
+            uris: uris
+          });
+          
+          lastEnd = end + 1;
+          
+          // Add concept information to normdataArray for ResultTable
+          for (const uri of uris) {
+            // Only add if we haven't already added this URI
+            if (!addedUris.has(uri)) {
+              const conceptValues = conceptsMap[uri];
+              if (conceptValues) {
+                const prefLabel = conceptValues.prefLabel || '';
+                const altLabels = conceptValues.altLabel || [];
+                const definition = conceptValues.definition || '';
+                
+                const conceptObject = {
+                  uri: uri,
+                  prefLabel: prefLabel,
+                  altLabels: altLabels,
+                  definition: definition
+                };
+                normdataArray.push(conceptObject);
+                addedUris.add(uri);
+              }
+            }
+          }
+        }
+      }
+      
+      // Add remaining text after last match
+      if (lastEnd < sentence.length) {
+        sentenceObj.segments.push({
+          text: sentence.substring(lastEnd),
+          highlighted: false
+        });
+      }
+    } else {
+      // If no matches, add the entire sentence as a non-highlighted segment
+      sentenceObj.segments.push({
+        text: sentence,
+        highlighted: false
+      });
+    }
+    
+    annotatedSentences.push(sentenceObj);
   }
     
   return [

@@ -101,7 +101,7 @@ const onSubmit = async () => {
   // Call the function to calculate results
   const result = calculateResult(store.inputText, store.labelsMap, store.stemmedLabelsMap, store.conceptsMap, stemming.value)
   const tableResultObject = result[1]
-  console.log('tableResultObject:', result)
+  console.log('tableResultObject:', tableResultObject)
   const annotationResultObject = result[0]
   console.log('annotationResultObject:', annotationResultObject)
   store.setTableResultObject(tableResultObject)

@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <q-card v-if="store.annotationResultObject.length > 0">
+    <q-card v-if="store.annotationResultObject && store.annotationResultObject.length > 0">
       <q-card-section>
         <h5>Annotation</h5>
       </q-card-section>
