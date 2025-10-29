@@ -1,16 +1,18 @@
 <template>
-    <div class="q-pa-md">
-      <q-table
-        v-if ="store.tableResultObject && store.tableResultObject.length > 0"
-        title="Konzepte"
-        :rows="store.tableResultObject"
-        :columns="columns"
-        row-key="uri"
-        wrap-cells
-        dense
-        class="full-width"
-      />
-    </div>
+  <div class="q-pa-md"> <!-- ✅ Add this wrapper -->
+    <q-table
+      v-if="store.tableResultObject && store.tableResultObject.length > 0"
+      title="Konzepte"
+      :rows="store.tableResultObject"
+      :columns="columns"
+      row-key="uri"
+      wrap-cells
+      dense
+      class="full-width my-table"
+      title-class="text-weight-medium text-h6"
+      flat
+    />
+  </div>
 </template>
 
 <script setup>
@@ -49,3 +51,12 @@ const columns = [
 ]
 
 </script>
+
+<style scoped>
+
+.my-table {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+</style>

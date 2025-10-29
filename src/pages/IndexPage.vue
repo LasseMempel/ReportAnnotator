@@ -1,52 +1,45 @@
 <template>
   <q-page class="flex flex-center column">
     <div class="container">
-      <div class="q-pa-md">
-        <ThesaurusInput
-        />
-      </div>
-      <div class="row">
-        <div class="q-pa-md col-sm-6 col-12">
-          <FileInput
-            v-model="fileInputRef"
-            @file-processed="(text) => handleProcessedFile(text, 'fileInput')"
+    <div class="input-row q-pa-md">
+      <ThesaurusInput />
+      <FileInput
+        v-model="fileInputRef"
+        @file-processed="(text) => handleProcessedFile(text, 'fileInput')"
+      />
+      <OcrFileInput
+        v-model="ocrFileInputRef"
+        @file-processed="(text) => handleProcessedFile(text, 'ocrInput')"
+      />
+    </div>
+    <div class="row q-mt-md">
+      <div class="col-12">
+        <q-form
+          @submit.prevent="onSubmit"
+          @reset="onReset"
+          class="q-gutter-md"
+        >
+          <q-input
+            label="Paste Text"
+            v-model="localInputText"
+            filled
+            type="textarea"
           />
-        </div>
-        <div class="q-pa-md col-sm-6 col-12">
-          <OcrFileInput
-            v-model="ocrFileInputRef"
-            @file-processed="(text) => handleProcessedFile(text, 'ocrInput')"
-          />
-        </div>
+          <q-toggle v-model="stemming" label="Stemming" />
+          <div>
+            <q-btn label="Analyze" type="submit" color="accent" text-color="secondary" />
+            <q-btn label="Reset" type="reset" color="accent" text-color="secondary" flat />
+          </div>
+        </q-form>
       </div>
-      <div class="row">
-        <div class="q-pa-md col-12">
-          <q-form
-            @submit.prevent="onSubmit"
-            @reset="onReset"
-            class="q-gutter-md"
-          >
-            <q-input
-              label="Paste Text"
-              v-model="localInputText"
-              filled
-              type="textarea"
-            />
-            <q-toggle v-model="stemming" label="Stemming" />
-            <div>
-              <q-btn label="Analyze" type="submit" color="primary" />
-              <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
-            </div>
-          </q-form>
+    </div>
+      <div class="row q-gutter-y-md q-mt-md">
+        <div class="col-12">
+          <ResultCard />
         </div>
-      </div>
-      <div class="q-pa-md">
-        <ResultCard>
-        </ResultCard>
-      </div>
-      <div class="q-pa-md">
-        <ResultTable>
-        </ResultTable>
+        <div class="col-12">
+          <ResultTable />
+        </div>
       </div>
     </div>
   </q-page>
@@ -141,5 +134,17 @@ const onReset = () => {
   .container {
     padding: 0 8px;
   }
+}
+
+.input-row {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap on small screens */
+  gap: 16px;       /* Equivalent to q-gutter-md */
+}
+
+.input-row > * {
+  flex: 1;         /* Makes components grow equally */
+  min-width: 200px; /* Ensures components don't get too narrow */
+  /* Adjust min-width as needed for your components' ideal size */
 }
 </style>
