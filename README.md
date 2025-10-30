@@ -1,4 +1,4 @@
-# WaiRKBLAETTER (wairkblaetter)
+# Werkblatt Annotator (werkblattannotator)
 
 Project to embed unstructured conservation texts with terminology data
 
