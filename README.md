@@ -1,4 +1,4 @@
-# Werkblatt Annotator (werkblattannotator)
+# Report Annotator (reportannotator)
 
 Project to embed unstructured conservation texts with terminology data
 

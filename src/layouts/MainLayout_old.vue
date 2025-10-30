@@ -10,7 +10,7 @@
           aria-label="Menu"
         />
         <q-toolbar-title>
-          Werkblatt Annotator
+          Report Annotator
         </q-toolbar-title>
       </q-toolbar>
     </q-header>

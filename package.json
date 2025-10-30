@@ -2,7 +2,7 @@
   "name": "werkblattannotator",
   "version": "0.0.1",
   "description": "Project to embed unstructured conservation texts with terminology data",
-  "productName": "Werkblatt Annotator",
+  "productName": "Report Annotator",
   "author": "LasseMempel <lassemempel@gmail.com>",
   "type": "module",
   "private": true,

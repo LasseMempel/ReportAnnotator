@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="text-center">
-      <div class="text-h6 text-bold text-secondary">Werkblatt Annotator (Beta)</div>
+      <div class="text-h6 text-bold text-secondary">Report Annotator (Beta)</div>
       <!-- <div class="text-caption text-secondary">Metadata Mockup (Beta)</div> -->
     </div>
   </div>
@@ -27,7 +27,7 @@
     </div>
     <q-toolbar-title class="text-center">
       <div class="column items-center">
-        <div class="text-h5 text-bold header-title text-secondary">Werkblatt Annotator (Beta)</div>
+        <div class="text-h5 text-bold header-title text-secondary">Report Annotator (Beta)</div>
         <!-- <div class="text-subtitle1 header-subtitle text-secondary">Metadata Mockup (Beta)</div> -->
       </div>
     </q-toolbar-title>
