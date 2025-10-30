@@ -12,7 +12,7 @@
         <span 
           v-for="(segment, segIndex) in sentence.segments" 
           :key="`${sIndex}-${segIndex}`"
-          :class="{ 'text-primary': segment.highlighted }"
+          :class="{ 'text-accent': segment.highlighted }"
         >
           {{ segment.text }}
         </span>

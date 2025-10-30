@@ -46,7 +46,7 @@
 <div class="mobile-footer lt-sm">
     <div class="text-center q-mb-sm">
       <div class="text-caption">Leibniz-Zentrum für Archäologie (LEIZA) 2025</div>
-      <div class="text-caption">Lasse Mempel-Länger & Kristina Fischer & Nathaly Witt</div>
+      <div class="text-caption">Lasse Mempel-Länger</div>
     </div>
 
     <div class="row justify-center items-stretch q-gutter-x-md">
@@ -67,7 +67,7 @@
     <div class="row justify-center">
       <q-breadcrumbs separator="|" separator-color="white" active-color="">
         <q-breadcrumbs-el label="Leibniz-Zentrum für Archäologie (LEIZA) 2025" />
-        <q-breadcrumbs-el label="Lasse Mempel-Länger & Kristina Fischer & Nathaly Witt" />
+        <q-breadcrumbs-el label="Lasse Mempel-Länger" />
       </q-breadcrumbs>
     </div>
     <div class="row justify-center">
