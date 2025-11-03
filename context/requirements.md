@@ -15,156 +15,97 @@
 
 ---
 
-## 2. Funktionale Anforderungen
-
-### 4.1 Laden und Verarbeiten von SKOS-Vokabularen
-- [ ] Import von SKOS-Vokabularen (TTL/RDF) mit `rdflib.js`
-- [ ] Extraktion von `skos:prefLabel`, `skos:altLabel`, `skos:definition`, `skos:broader`, `skos:narrower`
-- [ ] Darstellung der Hierarchie in einer Baumstruktur
-- [ ] Zunächst nur ein Vokabular aktiv
-- [ ] Caching von Vokabular-Embeddings in IndexedDB
-
-### 4.2 Sprach- und Textverarbeitung
-- [ ] **Automatische Spracherkennung** (Deutsch/Englisch) für Text und Vokabular
-- [ ] Wahl des passenden Stemmer je nach Sprache (Deutsch/Englisch)
-- [ ] Fallback: Nur Stemming, keine Lemmatisierung (rein JS-basiert)
-- [ ] Optionale Nutzung eines **multilingualen Sentence-Transformer-Modells** `Xenova/distiluse-base-multilingual-cased-v1`
-
-### 4.3 Embedding-Berechnung
-- [ ] Clientseitige Berechnung mit `transformers.js`
-- [ ] Erzeugung von Vektor-Repräsentationen für:
-  - Konzepte (Labels + Definitionen + Broader-Relationen)
-  - Text-n-Gramme (uni-, bi-, trigramm)
-- [ ] Speicherung der Vokabularembeddings für Wiederverwendung
-
-### 4.4 Linking-Algorithmus
-- [ ] Kombination aus String- und Embedding-Similarity
-- [ ] Konfigurierbare Gewichtung (0–1)
-- [ ] Entscheidungslogik:
-  - Score > 0.8: akzeptieren
-  - 0.6–0.8: unsicher, markieren
-  - < 0.6: verwerfen
-- [ ] Bei mehreren Treffern: spezifischstes Konzept im Hierarchiebaum bevorzugen
-- [ ] Anzeige von Top-n Kandidaten (default: 3)
-
-### 4.5 Benutzerinteraktion
-- [ ] Farblich kodierte Hervorhebung im Text (grün = sicher, gelb = unsicher, rot = verworfen)
-- [ ] Benutzer können:
-  - Vorschläge bestätigen, ablehnen oder korrigieren
-  - Neue Begriffe hinzufügen und `skos:broader`-Relation wählen
-  - Korrekturen und Annotationen editieren
-- [ ] Lokale Speicherung der Korrekturen für Trainingsdatensätze
-
-### 4.6 Vokabularexpansion und Alignment
-- [ ] Optionale Einbindung alignter (z. B. englischer) Vokabulare zur Ergänzung fehlender Informationen
-- [ ] Embedding-basierte Vorschläge für Synonyme oder fehlende Definitionen
-- [ ] Nutzer kann Vorschläge annehmen oder anpassen
-- [ ] Speicherung der erweiterten Vokabulare lokal
-
-### 4.7 Datenexport
-- [ ] Export der Annotationen und Metadaten als JSON:
-  - erkannte Konzepte
-  - Ähnlichkeitswerte
-  - Kontextinformationen (Satz, Absatz)
-  - Nutzerkorrekturen
-- [ ] Perspektivisch Export im **NLP Interchange Format (NIF)**
+# Meta-Prompt: Arbeitskontext für die WaiRKBLAETTER App
 
 ---
+## Anweisung an den LLM-Agenten
 
-## 5. Nicht-funktionale Anforderungen
+Bevor du mit der Bearbeitung der Aufgabe beginnst, mache dich mit der Struktur der bereitgestellten Kontextdokumente vertraut. Jedes Dokument hat einen spezifischen Zweck. Die strikte Einhaltung dieser Struktur ist entscheidend für den Erfolg des Projekts.
 
-### 5.1 Performance
-- [ ] Berechnung der Embeddings komplett clientseitig (keine Serverlast)
-- [ ] Vektorberechnung für bis zu 10.000 Konzepte in <30s
-- [ ] Caching von Ergebnissen zur Performance-Steigerung
+### Übersicht der Kontext-Dokumente:
 
-### 5.2 Datenschutz
-- [ ] Keine Serverkommunikation
-- [ ] Lokale Persistenz in IndexedDB
-- [ ] Volle Offline-Funktionalität
+1.  **`C:\repos\WaiRKBLAETTER\context/project.md` - Das "Warum"**
+    -   **Zweck**: Enthält die übergeordnete Vision, die Zielsetzung der Anwendung und wichtiges Domänenwissen (z.B. zu SKOS, Embeddings).
+    -   **Nutzung**: Lies dieses Dokument, wenn du das grundlegende Ziel einer Anforderung verstehen musst. Dieses Dokument ändert sich selten.
 
-### 5.3 Usability
-- [ ] Intuitive Benutzeroberfläche
-- [ ] Einstellbare Gewichtung von String-/Embedding-Similarity
-- [ ] Visualisierung der Hierarchien und Annotationssicherheit
+2.  **`C:\repos\WaiRKBLAETTER\context/requirements.md` - Das "Was als Nächstes"**
+    -   **Zweck**: Eine reine To-Do-Liste zukünftiger Features und zu behebender Bugs im Markdown-Checklisten-Format.
+    -   **Nutzung**: Deine primäre Quelle für neue Entwicklungsaufgaben. Wenn du ein Feature implementiert hast, entfernst du den entsprechenden Eintrag aus dieser Datei.
 
-### 5.4 Erweiterbarkeit
-- [ ] Modulare Architektur (Stemming, Embeddings, Linking, Export als unabhängige Module)
-- [ ] Vorbereitung für spätere Integration von:
-  - POS-Tagging
-  - Phrase Chunking
-  - NER
-  - Relationserkennung
+3.  **`C:\repos\WaiRKBLAETTER\context/architecture.md` - Das "Wie (High-Level)"**
+    -   **Zweck**: Beschreibt die technische Architektur, die Hauptkomponenten und den Datenfluss.
+    -   **Nutzung**: Konsultiere dieses Dokument, um sicherzustellen, dass dein Code zur Gesamtarchitektur passt.
 
----
+4.  **`C:\repos\WaiRKBLAETTER\context\docu.md` - Das "Wie (Low-Level, lesbar)"**
+    -   **Zweck**: Detaillierte, für Menschen lesbare Dokumentation des *aktuellen, stabilen* Codes.
+    -   **Nutzung**: Deine Referenz, um existierende Funktionen, ihre Parameter und ihre Logik zu verstehen. Du bist verpflichtet, dieses Dokument nach jeder Code-Änderung zu aktualisieren.
 
-## 6. Geplante Erweiterungen
+**Dein Auftrag:**
+Implementiere eine prototypische Funktionalität zur Integration von Embedding similarity in den bestehenden Workflow.
 
-- [ ] **Kontextbasierte Embeddings** (satzweise statt n-Gramme)
-- [ ] **POS-Tagging** zur verbesserten Kategorisierung (Substantiv, Verb, Adjektiv)
-- [ ] **NER-basierte Heuristiken** zur Vorauswahl
-- [ ] **Relationserkennung** zwischen Konzepten im Satzkontext
-- [ ] **Human-in-the-loop-Annotation**, sobald ausreichend Daten vorhanden sind
-- [ ] **Semantische Suche** im Vokabular (Subgraph-basierte Auswahl)
+- Python script zum Laden des existierenden und vorgeladenen Vokabulars C:\repos\WaiRKBLAETTER\public\thesaurus\thesaurus.ttl
+- Berechnung von Embeddings aus skos:prefLabel, skos:broader, skos:altLabel, skos:definition, skos:scopeNote (Geeignete Einbettung in Text mit passenden kurzen, einwörtigenÜberleitungen auswählen: z.B. "Silber, ein/eine/eines Metall, auch ag, weißlich-graues Metall mit dem chemischen Symbol Ag und der Ordnungszahl 47")
+- Berücksichtigen, dass nicht immer alle diese Informationen vorhanden sind. label ist für alle Konzepte Pflicht. Alle nicht skosTopConcepts haben auch skos:broader. 
+- Speichern der Embeddings in einem Format und einer Datenstruktur, so dass sie gut über js abrufbar und strukturiert ist
 
----
+-> Diese Funktionen wurden mit dem Python Script C:\repos\WaiRKBLAETTER\scripts\create_embeddings.py bereits ausgeführt und das JSON generiert. Für das Datenmodell checke das Skript, da das Einlesen des JSOn deinen Kontext sprengen würde
 
-## 7. Forschungsspezifische Softwareanforderungen (RSE)
+- Funktion zum Vektorisieren von Wörtern im Kontext ihres Satzes
+- Einpflegung in den aktuellen Workflow - > Vergleich der string-basierten Treffer Wörter in den Sätzen mit den Embeddings ihrer gelinkten SKOS Konzepte (diese Laden)
+- On mouseover Anzeige der Sicherheit der identifizierten Begriffe nach Similarity score > gleich 0,8 grün, zwischen 0,6 und 0,8 gelb, unter 0,6 rot
 
-### 7.1 Testing
-- [ ] Unit-Tests für Parsing, Matching, Embedding und Export
-- [ ] Integrationstests für Annotation-Workflow
-- [ ] Beispiel-Testdatensätze zur Reproduzierbarkeit
+The thesaurus is really big. Under no circumstances try to read thesaurus.ttl
+Instead here are some concepts and the conceptScheme, that show you examples:
 
-### 7.2 CI/CD
-- [ ] Versionierung mit Git / GitHub
-- [ ] CI mit GitHub Actions:
-  - automatisierte Tests
-  - Linting (ESLint)
-- [ ] Deployment via GitHub Pages / Netlify
-- [ ] Semantische Versionierung (Semantic Release)
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
 
-### 7.3 Dokumentation & FAIRness
-- [ ] Reproduzierbarkeit (Versionen der Modelle fixiert)
-- [ ] Maschinenlesbare Metadaten (`CITATION.cff`, `README`, `LICENSE`)
-- [ ] Nutzer- und Entwicklerdokumentation
-- [ ] Exportfunktionen für Daten FAIR-kompatibel
+<https://www.w3id.org/archlink/terms/conservationthesaurus/A14455> a skos:Concept ;
+rdfs:seeAlso "https://www.dow.com/en-us/document-viewer.html?docPath=/content/dam/dcc/documents/884/884-01223-01-paraloid-b-72-solid-grade-thermoplastic-acrylic-resin-tds.pdf" ;
+skos:altLabel "Acryloid B72"@de,
+"Paraloid B-72"@de ;
+skos:broader <https://www.w3id.org/archlink/terms/conservationthesaurus/GFD582> ;
+skos:definition "Produktname für ein synthestisches Acrylharz der Firma Rohm und Haas (heute Teil von Dow Chemicals), bestehend aus Ethylmethacrylat und Methylacrylat sowie einem kleinen Anteil Butylmethacrylat. Aufgrund seiner hervorragenden Eigenschaften hinsichtlich Alterungsbeständigkeit, Transparenz und Reversibilität ist Paraloid B72 eines der am häufigsten eingesetzten Materialien in der Konservierung und Restaurierung. In verschiedenen organischen Lösungsmitteln gelöst wird es als Klebstoff, Bindemittel, Festigungsmittel und für Schutzüberzug für unterschiedliche Materialien verwendet."@de ;
+skos:inScheme <https://www.w3id.org/archlink/terms/conservationthesaurus> ;
+skos:notation "A14455" ;
+skos:note "Jane L. Down (2015) The evaluation of selected poly(vinyl acetate) and acrylic adhesives: A final research update, Studies in Conservation, 60:1, 33-54, DOI: 10.1179/2047058414Y.0000000129."@de,
+"Susan Buys, Victoria Oakley, The conservation and restoration of ceramics (Great Britain 1998), S. 191/192."@de,
+"Velson Horie, Materials for Conservation. Organic consolidants, adhesives and coatings (London 2010), S. 159."@de ;
+skos:prefLabel "Paraloid B72"@de .
 
----
+<https://www.w3id.org/archlink/terms/conservationthesaurus/C8CG15> a skos:Concept ;
+skos:altLabel "report"@en ;
+skos:definition "Sammelbegriff für Aufzeichnungen gemachter Beobachtungen und Handlungen"@de ;
+skos:inScheme <https://www.w3id.org/archlink/terms/conservationthesaurus> ;
+skos:narrower <https://www.w3id.org/archlink/terms/conservationthesaurus/A8D3G1>,
+<https://www.w3id.org/archlink/terms/conservationthesaurus/D3AF3A>,
+<https://www.w3id.org/archlink/terms/conservationthesaurus/G76B7G> ;
+skos:notation "C8CG15" ;
+skos:prefLabel "Dokumentation"@de,
+"documentation"@en ;
+skos:topConceptOf <https://www.w3id.org/archlink/terms/conservationthesaurus> .
 
-## 8. Technologiestack
-
-| Komponente | Technologie |
-|-------------|--------------|
-| Frontend | Quasar (Vue 3, JavaScript) |
-| Vokabular-Parsing | rdflib.js |
-| Embeddings | transformers.js + Xenova/distiluse-base-multilingual-cased-v1 |
-| String Matching | eigene Implementierung (z. B. Jaro-Winkler, Cosine) |
-| Speicherung | IndexedDB |
-| Export | JSON, perspektivisch NIF |
-| Tests | Vitest / Jest |
-| CI/CD | GitHub Actions + Netlify |
-
----
-
-## 9. Parameterübersicht
-
-| Parameter | Standardwert | Beschreibung |
-|------------|---------------|---------------|
-| Gewichtung String/Embedding | 0.5 | Balance zwischen beiden Ähnlichkeiten |
-| Akzeptanzschwelle | 0.8 | Automatische Verlinkung |
-| Unsicherheitsschwelle | 0.6 | Flag für unsichere Treffer |
-| Max. Kandidaten | 3 | Anzahl der Vorschläge pro Treffer |
-| N-Gramm-Bereich | 1–3 | Konfigurierbare Fenstergröße |
-
----
-
-## 10. Offene Forschungs- und Designfragen
-- Bewertung der Linkingqualität (Precision, Recall, F1)
-- Optimale Kombination aus Labels, Definitionen, Relationen für Konzeptvektoren
-- Gewichtung hierarchischer Beziehungen bei Konzeptwahl
-- UI-Design für effiziente Nutzerkorrekturen
-- Nutzung alignter Vokabulare (z. B. AAT, Wikidata) zur Erweiterung
+<https://www.w3id.org/archlink/terms/conservationthesaurus> a skos:ConceptScheme ;
+dc:creator "Kristina Fella" ;
+dc:description "Der Fachthesaurus umfasst eine Vielzahl von deutschen und englischen Begriffen, die für die Zustandserfassung und die Beschreibung von Konservierungs- und Restaurierungsmaßnahmen archäologischer Kulturgüter relevant sind. ."@de ;
+dc:title "Konservierungs- und Restaurierungsfachthesaurus für archäologische Kulturgüter"@de ;
+dcterms:contributor "Christian Eckmann",
+"Waldemar Muskalla" ;
+dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+dcterms:publisher "Leibniz-Zentrum für Archäologie (LEIZA)" ;
+dcterms:rights "CC BY 4.0" ;
+dcterms:subject "Archäologie"@de,
+"Konservierung"@de,
+"Restaurierung"@de ;
+vann:preferredNamespaceUri "https://www.w3id.org/archlink/terms/conservationthesaurus/" ;
+skos:hasTopConcept <https://www.w3id.org/archlink/terms/conservationthesaurus/A18D95>,
+<https://www.w3id.org/archlink/terms/conservationthesaurus/C4BCF8>,
+<https://www.w3id.org/archlink/terms/conservationthesaurus/C8CG15>,
+<https://www.w3id.org/archlink/terms/conservationthesaurus/CFGDA3>,
+<https://www.w3id.org/archlink/terms/conservationthesaurus/DAB4B7> .
 
 ---
 
