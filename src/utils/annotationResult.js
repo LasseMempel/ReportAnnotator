@@ -1,6 +1,8 @@
 import { tokenizeSentences, tokenizeWords, lowerCase, upperCase } from '../utils/nlp.js';
 import {stem } from '../utils/cistem.js';
 
+// make substring matching easier with this: "A loop, .indexOf() and math ("(where it ends)" = index + length)"
+
 function indexArrayOfSubstrings(str, searchValue, label, uris) {
   let i = 0;
   const searchValueLenght = searchValue.length
